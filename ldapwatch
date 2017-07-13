@@ -49,7 +49,7 @@ is_ldap_modified() {
 	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE"
 		"(modifyTimestamp>=$TIMESTAMP)" dn 2>/dev/null)"
 
-	if [[ $? -ne 0 || $? -ne 4 ]]; then
+	if [[ $? -ne 0 && $? -ne 4 ]]; then
 		ERR=$?
 		echo "LDAP error $ERR returned by ldapsearch" >&2
 		exit $ERR
