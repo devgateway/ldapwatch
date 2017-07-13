@@ -3,11 +3,32 @@ get_last_timestamp() {
 	TIMESTAMP_FILE="${TIMESTAMP_FILE:-/var/run/ldapwatch/timestamp}"
 	DATE_FORMAT=%Y%m%d%H%M%SZ
 
-	if [ -f "$TIMESTAMP_FILE" ]; then
+	if [[ -f "$TIMESTAMP_FILE" ]]; then
 		date --utc --file="$TIMESTAMP_FILE" +$DATE_FORMAT
 	else
 		mkdir -p "$(dirname "$TIMESTAMP_FILE")"
 		touch "$TIMESTAMP_FILE"
 		date --utc --date=@0 +$DATE_FORMAT
+	fi
+}
+
+is_ldap_modified() {
+	URI="$1"
+	BASE="$2"
+	TIMESTAMP=$3
+
+	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE"
+		"(modifyTimestamp>=$TIMESTAMP)" dn 2>/dev/null)"
+
+	if [[ $? -ne 0 -a $? -ne 4 ]]; then
+		ERR=$?
+		echo "LDAP error $ERR returned by ldapsearch" >&2
+		exit $ERR
+	fi
+
+	if [[ -n "$FOUND" ]]; then
+		return 0
+	else
+		return 1
 	fi
 }
