@@ -18,9 +18,8 @@ get_last_timestamp() {
 }
 
 is_ldap_modified() {
-	URI="$1"
-	BASE="$2"
-	TIMESTAMP=$3
+	BASE="$1"
+	TIMESTAMP=$2
 
 	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE"
 		"(modifyTimestamp>=$TIMESTAMP)" dn 2>/dev/null)"
