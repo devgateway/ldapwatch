@@ -3,6 +3,16 @@ if [[ -n "$VERBOSE" ]]; then
 	set -x
 fi
 
+WORK_DIR=/var/run/ldapwatch
+
+# print the file name for a given base at given URI
+timestamp_filename() {
+	URI_HASH="$(echo "$1" | sha1sum | cut -d ' ' -f 1)"
+	BASE_HASH="$(echo "$2" | sha1sum | cut -d ' ' -f 1)"
+
+	echo "$WORK_DIR/$URI_HASH/$BASE_HASH"
+}
+
 get_last_timestamp() {
 	TIMESTAMP_FILE="${TIMESTAMP_FILE:-/var/run/ldapwatch_timestamp}"
 	DATE_FORMAT=%Y%m%d%H%M%SZ
