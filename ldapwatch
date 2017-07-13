@@ -3,7 +3,14 @@ if [[ -n "$VERBOSE" ]]; then
 	set -x
 fi
 
-WORK_DIR=/var/run/ldapwatch
+WORK_DIR=/run/ldapwatch
+LOCK_FILE="$WORK_DIR/lock"
+if [[ -f "$LOCK_FILE" ]]; then
+	echo "Lock file $LOCK_FILE present, exiting." >&2
+	exit 81 # not used in ldap.h
+else
+	touch "$LOCK_FILE"
+fi
 
 # print the file name for a given base at given URI
 timestamp_filename() {
@@ -52,6 +59,7 @@ is_ldap_modified() {
 	CODE=$?
 	if [[ $CODE -ne 0 && $CODE -ne 4 ]]; then
 		echo "LDAP error $CODE returned by ldapsearch" >&2
+		rm -f "$LOCK_FILE"
 		exit $CODE
 	fi
 
@@ -78,7 +86,7 @@ if [[ $# -lt 3 ]]; then
 	COMMAND executable and its arguments to run if change detected
 	        Example: /bin/true --foo --bar
 	EOF
-	exit 1
+	exit 82 # not used in ldap.h
 fi
 
 URI="$1"
@@ -94,3 +102,6 @@ while true; do
 		eval "$COMMAND" || delete_timestamp "$BASE"
 	fi
 done
+
+rm -f "$LOCK_FILE"
+exit 0
