@@ -41,9 +41,10 @@ delete_timestamp() {
 	rm -f "$FILE_NAME"
 }
 
+# return 0 if subtree has been modified since last check
 is_ldap_modified() {
 	BASE="$1"
-	TIMESTAMP=$2
+	TIMESTAMP=$(get_last_timestamp "$BASE")
 
 	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE"
 		"(modifyTimestamp>=$TIMESTAMP)" dn 2>/dev/null)"
