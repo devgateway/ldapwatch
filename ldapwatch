@@ -27,7 +27,7 @@ get_last_timestamp() {
 	DATE_FORMAT=%Y%m%d%H%M%SZ
 
 	if [[ -f "$FILE_NAME" ]]; then
-		date --utc --file="$FILE_NAME" +$DATE_FORMAT
+		date --utc --reference="$FILE_NAME" +$DATE_FORMAT
 	else
 		date --utc --date=@0 +$DATE_FORMAT
 	fi
