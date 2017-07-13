@@ -61,3 +61,24 @@ is_ldap_modified() {
 		return 1
 	fi
 }
+
+# script body
+if [[ $# -lt 3 ]]; then
+	# show usage
+	cat >&2 <<-EOF
+	Usage: $0 URI BASE COMMAND [BASE COMMAND]...
+
+	Execute command if elements in LDAP subtree have been modified.
+
+	Arguments:
+	URI     LDAP server(s) URI
+	        Example: ldap://ldap.example.org
+	BASE    distinguished name, base of the subtree search
+	        Example: ou=people,dc=example,dc=org
+	COMMAND executable and its arguments to run if change detected
+	        Example: /bin/true --foo --bar
+	EOF
+	exit 1
+fi
+
+URI="$1"
