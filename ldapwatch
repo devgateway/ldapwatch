@@ -26,8 +26,12 @@ get_last_timestamp() {
 	fi
 }
 
-	mkdir -p "$(dirname "$TIMESTAMP_FILE")"
-	touch "$TIMESTAMP_FILE"
+# update mtime on a file for given URI and base
+update_timestamp() {
+	BASE="$1"
+	FILE_NAME="$(timestamp_filename "$URI" "$BASE")"
+	mkdir -p "$(dirname "$FILE_NAME")"
+	touch "$FILE_NAME"
 }
 
 is_ldap_modified() {
