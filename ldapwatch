@@ -34,6 +34,13 @@ update_timestamp() {
 	touch "$FILE_NAME"
 }
 
+# delete timestamp file if command failed: force run next time
+delete_timestamp() {
+	BASE="$1"
+	FILE_NAME="$(timestamp_filename "$URI" "$BASE")"
+	rm -f "$FILE_NAME"
+}
+
 is_ldap_modified() {
 	BASE="$1"
 	TIMESTAMP=$2
