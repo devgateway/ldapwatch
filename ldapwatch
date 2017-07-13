@@ -1,4 +1,8 @@
 #!/bin/bash
+if [[ -n "$VERBOSE" ]]; then
+	set -x
+fi
+
 get_last_timestamp() {
 	TIMESTAMP_FILE="${TIMESTAMP_FILE:-/var/run/ldapwatch/timestamp}"
 	DATE_FORMAT=%Y%m%d%H%M%SZ
