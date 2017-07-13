@@ -13,15 +13,18 @@ timestamp_filename() {
 	echo "$WORK_DIR/$URI_HASH/$BASE_HASH"
 }
 
+# print last known search time in LDAP generalized time format
 get_last_timestamp() {
-	TIMESTAMP_FILE="${TIMESTAMP_FILE:-/var/run/ldapwatch_timestamp}"
+	BASE="$1"
+	FILE_NAME="$(timestamp_filename "$URI" "$BASE")"
 	DATE_FORMAT=%Y%m%d%H%M%SZ
 
-	if [[ -f "$TIMESTAMP_FILE" ]]; then
-		date --utc --file="$TIMESTAMP_FILE" +$DATE_FORMAT
+	if [[ -f "$FILE_NAME" ]]; then
+		date --utc --file="$FILE_NAME" +$DATE_FORMAT
 	else
 		date --utc --date=@0 +$DATE_FORMAT
 	fi
+}
 
 	mkdir -p "$(dirname "$TIMESTAMP_FILE")"
 	touch "$TIMESTAMP_FILE"
