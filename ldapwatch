@@ -46,13 +46,13 @@ is_ldap_modified() {
 	BASE="$1"
 	TIMESTAMP=$(get_last_timestamp "$BASE")
 
-	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE"
+	FOUND="$(ldapsearch -z 1 -LLL -x -H "$URI" -b "$BASE" \
 		"(modifyTimestamp>=$TIMESTAMP)" dn 2>/dev/null)"
 
-	if [[ $? -ne 0 && $? -ne 4 ]]; then
-		ERR=$?
-		echo "LDAP error $ERR returned by ldapsearch" >&2
-		exit $ERR
+	CODE=$?
+	if [[ $CODE -ne 0 && $CODE -ne 4 ]]; then
+		echo "LDAP error $CODE returned by ldapsearch" >&2
+		exit $CODE
 	fi
 
 	if [[ -n "$FOUND" ]]; then
