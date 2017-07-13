@@ -82,3 +82,11 @@ if [[ $# -lt 3 ]]; then
 fi
 
 URI="$1"
+shift
+
+while true; do
+	BASE="$1"
+	COMMAND="$2"
+	shift 2 || break
+
+done
