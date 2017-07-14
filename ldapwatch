@@ -17,7 +17,7 @@ if [[ -n "$VERBOSE" ]]; then
 	set -x
 fi
 
-WORK_DIR=/run/ldapwatch
+WORK_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/ldapwatch"
 LOCK_FILE="$WORK_DIR/lock"
 if [[ -f "$LOCK_FILE" ]]; then
 	echo "Lock file $LOCK_FILE present, exiting." >&2
